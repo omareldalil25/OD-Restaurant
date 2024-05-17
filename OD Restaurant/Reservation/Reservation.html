@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation</title>
+      <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Rubik:wght@400;500;600;700&family=Shadows+Into+Light&display=swap"
+    rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Reserve Your Table Now</h1>
+        <div class="form-container">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time">
+            <div class="table-container">
+                <div class="table">
+                    <p>Table 1</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <div class="table">
+                    <p>Table 2</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <div class="table">
+                    <p>Table 3</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <div class="table">
+                    <p>Table 4</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <div class="table">
+                    <p>Table 5</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <div class="table">
+                    <p>Table 6</p>
+                    <button class="btn" onclick="toggleReservation(this)">Reserve</button>
+                </div>
+                <!-- Add more tables as needed -->
+            </div>
+        </div>
+        <div id="message" class="message"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
