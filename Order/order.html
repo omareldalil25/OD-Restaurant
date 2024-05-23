@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Page</title>
-          <!-- 
+    <!-- 
     - favicon
   -->
-  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
 
-  <!-- 
+    <!-- 
     - google font link
   -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Rubik:wght@400;500;600;700&family=Shadows+Into+Light&display=swap"
-    rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Rubik:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: hsl(38, 44%, 96%);;
+            background-color: hsl(38, 44%, 96%);
             margin: 0;
             padding: 0;
             display: flex;
@@ -28,7 +27,7 @@
             align-items: center;
             height: 100vh;
         }
-
+        
         .container {
             background-color: white;
             border-radius: 10px;
@@ -38,7 +37,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
+        
         .step-container {
             display: flex;
             align-items: center;
@@ -46,7 +45,7 @@
             position: relative;
             margin-bottom: 30px;
         }
-
+        
         .step {
             width: 50px;
             height: 50px;
@@ -61,13 +60,13 @@
             background-color: white;
             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
-
+        
         .step.completed {
             background-color: green;
             color: white;
             border-color: green;
         }
-
+        
         .line {
             flex-grow: 1;
             height: 2px;
@@ -76,34 +75,38 @@
             top: 50%;
             z-index: 1;
             transition: background-color 0.3s;
-            margin: 0 10px; /* Adjust this value for spacing between circles */
+            margin: 0 10px;
+            /* Adjust this value for spacing between circles */
         }
-
+        
         .line.completed {
             background-color: green;
         }
-
+        
         .step-content {
             display: none;
             text-align: center;
         }
-
+        
         .show-content {
             display: block;
         }
-
+        
         h2 {
             font-size: 24px;
             margin-bottom: 20px;
         }
-
+        
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
         }
-
-        input, textarea, select, button {
+        
+        input,
+        textarea,
+        select,
+        button {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 20px;
@@ -111,7 +114,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-
+        
         button {
             background-color: hsl(31, 84%, 50%);
             color: white;
@@ -119,22 +122,27 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
+        
         button:hover {
             background-color: hsl(31, 84%, 50%);
         }
-
+        
         #confirmationMessage {
             color: green;
             font-weight: bold;
         }
-
+        
+        .warning {
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+        
         @media (max-width: 600px) {
             .step-container {
-                flex-direction:row;
+                flex-direction: row;
                 align-items: flex-start;
             }
-
             .line {
                 width: 2px;
                 height: 2px;
@@ -143,6 +151,7 @@
         }
     </style>
 </head>
+
 <body onload="showContent(1)">
     <div class="container">
         <div class="step-container">
@@ -157,10 +166,10 @@
             <h2>Enter Your Information</h2>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br><br>
-            
+
             <label for="address">Address:</label>
             <input type="text" id="address" name="address" required><br><br>
-            
+
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required><br><br>
 
@@ -171,7 +180,8 @@
             <h2>Order Confirmation</h2>
             <p>Do you want to confirm the order?</p>
             <textarea id="orderConfirmation" rows="4" cols="50"></textarea><br><br>
-            <button onclick="showContent(3)">Confirm Order</button>
+            <button onclick="checkOrderConfirmation()">Confirm Order</button>
+            <p id="warningMessage" class="warning">Are you sure you want to cancel the order?</p>
         </div>
 
         <div id="content3" class="step-content">
@@ -185,6 +195,8 @@
             <p id="confirmationMessage" style="display: none;">Your order has been confirmed. It will be delivered within 45 minutes.</p>
         </div>
     </div>
+
+    <audio id="alarmSound" src="i.mp3" preload="auto"></audio>
 
     <script>
         function showContent(step) {
@@ -211,26 +223,14 @@
             }
         }
 
-        function proceedToPay() {
-            var paymentMethod = document.getElementById("paymentMethod").value;
-            if (paymentMethod === "online") {
-                // Simulate online payment process
-                setTimeout(function() {
-                    document.getElementById('confirmationMessage').style.display = 'block';
-                    document.getElementById('step3').classList.add('completed');
-                    var lines = document.querySelectorAll('.line');
-                    for (var j = 0; j < lines.length; j++) {
-                        lines[j].classList.add('completed');
-                    }
-                }, 2000); // Simulating a 2 second delay for payment confirmation
+        function checkOrderConfirmation() {
+            var orderText = document.getElementById('orderConfirmation').value.toLowerCase();
+            var alarmSound = document.getElementById('alarmSound');
+            alarmSound.play();
+            if (orderText === 'no') {
+                document.getElementById('warningMessage').style.display = 'block';
             } else {
-                // If payment is on delivery, directly show payment confirmation
-                document.getElementById('confirmationMessage').style.display = 'block';
-                document.getElementById('step3').classList.add('completed');
-                var lines = document.querySelectorAll('.line');
-                for (var j = 0; j < lines.length; j++) {
-                    lines[j].classList.add('completed');
-                }
+                showContent(3);
             }
         }
 
@@ -249,7 +249,7 @@
                 }
             }
         }
-        
     </script>
 </body>
+
 </html>
